@@ -29,6 +29,11 @@ func New(host string, port int, user, passwd string, useSSL bool) (*Bitcoind, er
 	return &Bitcoind{rpcClient}, nil
 }
 
+func (b *Bitcoind) Call(method string, params interface{}) (RpcResponse, error) {
+	r, err := b.client.call(method, params)
+	return r, err
+}
+
 // BackupWallet Safely copies wallet.dat to destination,
 // which can be a directory or a path with filename on the remote server
 func (b *Bitcoind) BackupWallet(destination string) error {
@@ -669,3 +674,4 @@ func (b *Bitcoind) WalletPassphraseChange(oldPassphrase, newPassprhase string) e
 	r, err := b.client.call("walletpassphrasechange", []interface{}{oldPassphrase, newPassprhase})
 	return handleError(err, &r)
 }
+
